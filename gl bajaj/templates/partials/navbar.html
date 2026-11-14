@@ -6,26 +6,13 @@
     </a>
 
     <ul class="nav-links" id="navLinks">
-      <li><a href="{{ url_for('index') }}" class="{{ 'active' if request.endpoint == 'index' else '' }}" data-i18n="nav_home">Home</a></li>
-      <li><a href="{{ url_for('services') }}" class="{{ 'active' if request.endpoint in ('services', 'worker_detail') else '' }}" data-i18n="nav_services">Services</a></li>
-      <li><a href="{{ url_for('about') }}" class="{{ 'active' if request.endpoint == 'about' else '' }}" data-i18n="nav_about">About</a></li>
-      <li><a href="{{ url_for('contact') }}" class="{{ 'active' if request.endpoint == 'contact' else '' }}" data-i18n="nav_contact">Contact</a></li>
+      <li><a href="{{ url_for('index') }}" class="{{ 'active' if request.endpoint == 'index' else '' }}">Home</a></li>
+      <li><a href="{{ url_for('services') }}" class="{{ 'active' if request.endpoint in ('services', 'worker_detail') else '' }}">Services</a></li>
+      <li><a href="{{ url_for('about') }}" class="{{ 'active' if request.endpoint == 'about' else '' }}">About</a></li>
+      <li><a href="{{ url_for('contact') }}" class="{{ 'active' if request.endpoint == 'contact' else '' }}">Contact</a></li>
     </ul>
 
     <div class="nav-actions">
-      <!-- Language Switcher Button (English <-> Hindi) -->
-      <button type="button" class="btn-nav-control" id="langToggleBtn" title="Switch Language / भाषा बदलें" aria-label="Switch Language">
-        <i data-lucide="languages" style="width: 16px; height: 16px; color: var(--primary-blue);"></i>
-        <span id="langLabel" style="font-size: 0.825rem; font-weight: 750;">हिन्दी</span>
-      </button>
-
-      <!-- Theme Switcher Button (Light <-> Dark Mode) -->
-      <button type="button" class="btn-nav-control btn-theme-control" id="themeToggleBtn" title="Toggle Light / Dark Mode" aria-label="Toggle Theme">
-        <i data-lucide="moon" id="themeIconMoon" style="width: 16px; height: 16px;"></i>
-        <i data-lucide="sun" id="themeIconSun" style="width: 16px; height: 16px; display: none;"></i>
-        <span id="themeLabel" class="theme-text-label" style="font-size: 0.8rem; font-weight: 600;">Dark</span>
-      </button>
-
       {% if current_user %}
         <a href="{{ url_for('notifications') }}" class="notif-btn" title="Notifications">
           <i data-lucide="bell" style="width: 19px; height: 19px;"></i>
@@ -73,8 +60,8 @@
           </div>
         </div>
       {% else %}
-        <a href="{{ url_for('login') }}" class="btn-nav-login" data-i18n="nav_login">Login</a>
-        <a href="{{ url_for('register') }}" class="btn-nav-register" data-i18n="nav_register">Register</a>
+        <a href="{{ url_for('login') }}" class="btn-nav-login">Login</a>
+        <a href="{{ url_for('register') }}" class="btn-nav-register">Register</a>
       {% endif %}
 
       <button class="mobile-nav-toggle" id="mobileNavToggle" aria-label="Toggle navigation">

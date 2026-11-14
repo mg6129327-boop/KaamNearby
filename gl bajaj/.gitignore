@@ -31,4 +31,3 @@ instance/*.db-wal
 uploads/verifications/*
 !uploads/verifications/.gitkeep
 
-instance/*.db

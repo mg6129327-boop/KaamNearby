@@ -1,10 +1,6 @@
 import os
 import re
 import math
-import json
-import secrets
-import urllib.request
-import urllib.parse
 from datetime import datetime
 from flask import (
     Flask, render_template, request, redirect, url_for, flash,
@@ -126,6 +122,12 @@ def create_app(test_config=None):
     else:
         app.config.from_object(test_config)
 
+    # Production safety: no debug, secure cookies, and a real secret key is mandatory
+    if os.environ.get('KAAMNEARBY_PRODUCTION') == '1':
+        if not os.environ.get('SECRET_KEY'):
+            raise RuntimeError('SECRET_KEY environment variable is required when KAAMNEARBY_PRODUCTION=1.')
+        app.config.update(DEBUG=False, SESSION_COOKIE_SECURE=True)
+
     # Ensure upload folder exists
     os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
     os.makedirs(os.path.dirname(os.path.abspath(app.config['DATABASE'])), exist_ok=True)
@@ -205,17 +207,16 @@ def create_app(test_config=None):
     @app.route('/')
     def index():
         db = get_db()
-        # Fetch active categories as dicts for clean template & JSON use
-        categories_raw = db.execute("SELECT * FROM categories WHERE is_active = 1 ORDER BY id ASC").fetchall()
-        categories = [dict(c) for c in categories_raw]
+        # Fetch active categories
+        categories = db.execute("SELECT * FROM categories WHERE is_active = 1 ORDER BY id ASC").fetchall()
         
-        # Fetch featured approved and available workers (up to 24 for rich Vue filtering)
+        # Fetch featured approved and available workers
         featured_workers_raw = db.execute("""
             SELECT w.*, u.name, u.city 
             FROM workers w
             JOIN users u ON w.user_id = u.id
             WHERE w.verification_status = 'approved' AND w.available = 1 AND u.is_active = 1
-            ORDER BY w.id DESC LIMIT 24
+            ORDER BY w.id DESC LIMIT 6
         """).fetchall()
 
         featured_workers = []
@@ -237,47 +238,6 @@ def create_app(test_config=None):
             worker_count=worker_count,
             completed_bookings=completed_bookings
         )
-
-    @app.route('/api/workers')
-    def api_workers():
-        db = get_db()
-        category = request.args.get('category', '').strip()
-        city = request.args.get('city', '').strip()
-        query = request.args.get('q', '').strip().lower()
-
-        sql = """
-            SELECT w.*, u.name, u.city 
-            FROM workers w
-            JOIN users u ON w.user_id = u.id
-            WHERE w.verification_status = 'approved' AND w.available = 1 AND u.is_active = 1
-        """
-        params = []
-        if category:
-            sql += " AND LOWER(w.category) LIKE ?"
-            params.append(f"%{category.lower()}%")
-        if city:
-            sql += " AND LOWER(u.city) = ?"
-            params.append(city.lower())
-
-        sql += " ORDER BY w.id DESC LIMIT 30"
-        rows = db.execute(sql, params).fetchall()
-
-        results = []
-        for r in rows:
-            d = dict(r)
-            stats = get_worker_rating_stats(r['id'])
-            d['avg_rating'] = stats['avg_rating']
-            d['total_reviews'] = stats['total_reviews']
-            if query:
-                if (query in d['name'].lower() or 
-                    query in (d.get('bio') or '').lower() or 
-                    query in (d.get('category') or '').lower() or
-                    query in (d.get('service_area') or '').lower()):
-                    results.append(d)
-            else:
-                results.append(d)
-
-        return jsonify({'workers': results, 'count': len(results)})
 
     @app.route('/services')
     def services():
@@ -684,227 +644,6 @@ def create_app(test_config=None):
         elif role == 'admin':
             return redirect(url_for('admin_dashboard'))
         return redirect(url_for('index'))
-
-    # -------------------------------------------------------------
-    # Google OAuth 2.0 Routes (Login & Sign-up)
-    # -------------------------------------------------------------
-    @app.route('/auth/google')
-    def google_login():
-        if 'user_id' in session:
-            return redirect_to_dashboard(session.get('user_role'))
-
-        role = request.args.get('role', 'customer').strip().lower()
-        if role not in ('customer', 'worker'):
-            role = 'customer'
-
-        next_url = request.args.get('next', '')
-        state_token = secrets.token_urlsafe(32)
-        session['oauth_state'] = state_token
-        session['oauth_role'] = role
-        session['oauth_next'] = next_url
-
-        client_id = current_app.config.get('GOOGLE_CLIENT_ID', '').strip()
-        client_secret = current_app.config.get('GOOGLE_CLIENT_SECRET', '').strip()
-
-        # If real Google credentials are configured in .env, redirect to accounts.google.com
-        if client_id and client_secret and not client_id.startswith('your-google'):
-            redirect_uri = url_for('google_callback', _external=True)
-            params = {
-                'client_id': client_id,
-                'redirect_uri': redirect_uri,
-                'response_type': 'code',
-                'scope': 'openid email profile',
-                'state': state_token,
-                'access_type': 'offline',
-                'prompt': 'select_account'
-            }
-            auth_url = f"https://accounts.google.com/o/oauth2/v2/auth?{urllib.parse.urlencode(params)}"
-            return redirect(auth_url)
-
-        # Developer / Local Setup guide screen when credentials aren't configured yet
-        return render_template(
-            'auth/google_setup.html',
-            state=state_token,
-            role=role,
-            client_id=client_id,
-            callback_url=url_for('google_callback', _external=True)
-        )
-
-    @app.route('/auth/google/callback')
-    def google_callback():
-        if 'user_id' in session:
-            return redirect_to_dashboard(session.get('user_role'))
-
-        error = request.args.get('error')
-        if error:
-            flash(f"Google sign-in was canceled: {error}", "error")
-            return redirect(url_for('login'))
-
-        state = request.args.get('state')
-        expected_state = session.get('oauth_state')
-        if not state or not expected_state or state != expected_state:
-            flash("Security check failed (invalid OAuth state). Please try again.", "error")
-            return redirect(url_for('login'))
-
-        code = request.args.get('code')
-        if not code:
-            flash("Missing authorization code from Google.", "error")
-            return redirect(url_for('login'))
-
-        client_id = current_app.config.get('GOOGLE_CLIENT_ID', '').strip()
-        client_secret = current_app.config.get('GOOGLE_CLIENT_SECRET', '').strip()
-
-        user_info = None
-
-        # Check for simulated test callback (sandbox / test environment)
-        if code.startswith('simulated_google_code_'):
-            sim_email = session.get('sim_google_email', 'user.google@example.com')
-            sim_name = session.get('sim_google_name', 'Google User')
-            sim_avatar = session.get('sim_google_avatar', '')
-            user_info = {
-                'sub': 'google_sim_' + secrets.token_hex(8),
-                'email': sim_email,
-                'name': sim_name,
-                'picture': sim_avatar,
-                'email_verified': True
-            }
-        else:
-            try:
-                # Exchange authorization code for tokens
-                token_data = urllib.parse.urlencode({
-                    'code': code,
-                    'client_id': client_id,
-                    'client_secret': client_secret,
-                    'redirect_uri': url_for('google_callback', _external=True),
-                    'grant_type': 'authorization_code'
-                }).encode('utf-8')
-
-                token_req = urllib.request.Request(
-                    'https://oauth2.googleapis.com/token',
-                    data=token_data,
-                    headers={'Content-Type': 'application/x-www-form-urlencoded'}
-                )
-                with urllib.request.urlopen(token_req, timeout=10) as token_resp:
-                    token_json = json.loads(token_resp.read().decode('utf-8'))
-                    access_token = token_json.get('access_token')
-
-                if not access_token:
-                    flash("Failed to obtain access token from Google.", "error")
-                    return redirect(url_for('login'))
-
-                # Fetch Google user profile
-                userinfo_req = urllib.request.Request('https://www.googleapis.com/oauth2/v3/userinfo')
-                userinfo_req.add_header('Authorization', f'Bearer {access_token}')
-                with urllib.request.urlopen(userinfo_req, timeout=10) as userinfo_resp:
-                    user_info = json.loads(userinfo_resp.read().decode('utf-8'))
-
-            except Exception as e:
-                err_msg = str(e)
-                if "Errno 8" in err_msg or "nodename nor servname" in err_msg:
-                    flash("Could not connect to Google OAuth servers (Network resolution failed). Restarting the server with internet access resolves this.", "error")
-                else:
-                    flash(f"Error communicating with Google OAuth: {err_msg}", "error")
-                return redirect(url_for('login'))
-
-        if not user_info or not user_info.get('email'):
-            flash("Could not retrieve email address from your Google account.", "error")
-            return redirect(url_for('login'))
-
-        email = user_info['email'].strip().lower()
-        name = user_info.get('name') or email.split('@')[0].capitalize()
-        google_id = user_info.get('sub')
-        avatar_url = user_info.get('picture', '')
-
-        db = get_db()
-        existing_user = db.execute(
-            "SELECT * FROM users WHERE google_id = ? OR email = ?",
-            (google_id, email)
-        ).fetchone()
-
-        if existing_user:
-            if not existing_user['is_active']:
-                flash("This account has been deactivated. Please contact support.", "error")
-                return redirect(url_for('login'))
-
-            # Update google_id and avatar if missing
-            db.execute("""
-                UPDATE users 
-                SET google_id = COALESCE(google_id, ?), 
-                    avatar_url = COALESCE(avatar_url, ?),
-                    auth_provider = CASE WHEN auth_provider IS NULL OR auth_provider = 'local' THEN 'google' ELSE auth_provider END
-                WHERE id = ?
-            """, (google_id, avatar_url, existing_user['id']))
-            db.commit()
-
-            user_id = existing_user['id']
-            user_name = existing_user['name']
-            user_role = existing_user['role']
-            is_new = False
-        else:
-            # Create new user via Google Sign-up
-            role = session.get('oauth_role', 'customer')
-            random_pw_hash = generate_password_hash(secrets.token_urlsafe(32))
-            default_city = 'Mathura'
-
-            cur = db.execute("""
-                INSERT INTO users (name, email, password_hash, role, city, google_id, avatar_url, auth_provider, is_active)
-                VALUES (?, ?, ?, ?, ?, ?, ?, 'google', 1)
-            """, (name, email, random_pw_hash, role, default_city, google_id, avatar_url))
-            db.commit()
-            user_id = cur.lastrowid
-            user_name = name
-            user_role = role
-            is_new = True
-
-            # If registered as worker, initialize worker profile row
-            if role == 'worker':
-                first_cat = db.execute("SELECT name FROM categories WHERE is_active = 1 LIMIT 1").fetchone()
-                cat_name = first_cat['name'] if first_cat else 'Electrical Services'
-                db.execute("""
-                    INSERT INTO workers (user_id, category, bio, starting_price, experience_years, service_area, verification_status, available)
-                    VALUES (?, ?, ?, 350.0, 2, 'Mathura Locality', 'pending', 1)
-                """, (user_id, cat_name, 'Skilled service provider registered via Google.'))
-                db.commit()
-
-        # Log in session securely
-        next_url = session.get('oauth_next')
-        session.clear()
-        session['user_id'] = user_id
-        session['user_name'] = user_name
-        session['user_email'] = email
-        session['user_role'] = user_role
-        if avatar_url:
-            session['user_avatar'] = avatar_url
-        generate_csrf_token()
-
-        action = "GOOGLE_OAUTH_SIGNUP" if is_new else "GOOGLE_OAUTH_LOGIN"
-        log_audit(user_id, action, f"Google account {email} authenticated from {request.remote_addr}")
-
-        if is_new:
-            flash(f"Welcome to KaamNearby, {user_name}! Your account has been created with Google.", "success")
-        else:
-            flash(f"Welcome back, {user_name}! Signed in with Google.", "success")
-
-        if next_url and next_url.startswith('/'):
-            return redirect(next_url)
-        return redirect_to_dashboard(user_role)
-
-    @app.route('/auth/google/simulate', methods=['POST'])
-    def google_simulate():
-        validate_csrf()
-        sim_name = request.form.get('sim_name', 'Rohan Sharma').strip()
-        sim_email = request.form.get('sim_email', 'rohan.sharma.test@gmail.com').strip().lower()
-        role = request.form.get('role', 'customer').strip().lower()
-
-        state_token = secrets.token_urlsafe(32)
-        session['oauth_state'] = state_token
-        session['oauth_role'] = role
-        session['sim_google_name'] = sim_name
-        session['sim_google_email'] = sim_email
-        session['sim_google_avatar'] = 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=120&q=80'
-
-        sim_code = 'simulated_google_code_' + secrets.token_hex(16)
-        return redirect(url_for('google_callback', code=sim_code, state=state_token))
 
     # -------------------------------------------------------------
     # Notification Routes

@@ -15,9 +15,6 @@ CREATE TABLE IF NOT EXISTS users (
     phone TEXT,
     city TEXT NOT NULL,
     is_active INTEGER DEFAULT 1,
-    google_id TEXT,
-    avatar_url TEXT,
-    auth_provider TEXT DEFAULT 'local',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
