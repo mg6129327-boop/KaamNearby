@@ -1,0 +1,129 @@
+{% extends 'base.html' %}
+
+{% block title %}Add Workers — KaamNearby{% endblock %}
+
+{% macro worker_row(idx, v, cats) -%}
+<div class="aw-row card" data-row>
+  <div class="aw-row-head">
+    <h3 class="aw-title">Worker</h3>
+    <button type="button" class="btn btn-outline btn-sm aw-remove" data-remove>Remove</button>
+  </div>
+  <div class="aw-grid">
+    <div class="form-group">
+      <label>Full name *</label>
+      <input type="text" name="workers[{{ idx }}][name]" class="form-control" minlength="2" maxlength="60" value="{{ v.name or '' }}" required>
+    </div>
+    <div class="form-group">
+      <label>Login email *</label>
+      <input type="email" name="workers[{{ idx }}][email]" class="form-control" value="{{ v.email or '' }}" required>
+    </div>
+    <div class="form-group">
+      <label>City *</label>
+      <input type="text" name="workers[{{ idx }}][city]" class="form-control" value="{{ v.city or '' }}" required>
+    </div>
+    <div class="form-group">
+      <label>Service category *</label>
+      <select name="workers[{{ idx }}][category]" class="form-control" required>
+        <option value="">Select</option>
+        {% for c in cats %}
+        <option value="{{ c.name }}" {% if v.category == c.name %}selected{% endif %}>{{ c.name }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Phone</label>
+      <input type="tel" name="workers[{{ idx }}][phone]" class="form-control" value="{{ v.phone or '' }}">
+    </div>
+    <div class="form-group">
+      <label>Starting price (₹)</label>
+      <input type="number" name="workers[{{ idx }}][starting_price]" class="form-control" min="50" step="10" value="{{ v.starting_price or '' }}" placeholder="300">
+    </div>
+    <div class="form-group">
+      <label>Years of experience</label>
+      <input type="number" name="workers[{{ idx }}][experience_years]" class="form-control" min="0" max="60" value="{{ v.experience_years or '' }}" placeholder="1">
+    </div>
+    <div class="form-group">
+      <label>Service area</label>
+      <input type="text" name="workers[{{ idx }}][service_area]" class="form-control" value="{{ v.service_area or '' }}" placeholder="e.g. Sector 62, Noida">
+    </div>
+    <div class="form-group aw-wide">
+      <label>Short bio</label>
+      <textarea name="workers[{{ idx }}][bio]" class="form-control" rows="2" maxlength="500">{{ v.bio or '' }}</textarea>
+    </div>
+    <div class="form-group">
+      <label>Password for this account *</label>
+      <input type="password" name="workers[{{ idx }}][password]" class="form-control" minlength="8" autocomplete="new-password" required>
+    </div>
+    <div class="form-group">
+      <label>Confirm password *</label>
+      <input type="password" name="workers[{{ idx }}][confirm_password]" class="form-control" minlength="8" autocomplete="new-password" required>
+    </div>
+  </div>
+</div>
+{%- endmacro %}
+
+{% block content %}
+<div class="dashboard-layout">
+  {% include 'partials/sidebar.html' %}
+
+  <div class="dashboard-content">
+    <div class="dashboard-header">
+      <div>
+        <h1 class="dashboard-title">Add Workers</h1>
+        <p class="dashboard-subtitle">Create one or many worker logins at once, for friends or family. Your own login stays as it is.</p>
+      </div>
+    </div>
+
+    <div class="aw-layout">
+      <section class="aw-form-col">
+        <form action="{{ url_for('customer_add_worker') }}" method="POST" id="addWorkerForm" class="aw-form">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+
+          <div id="workerRows" class="aw-rows" data-max="{{ max_rows }}">
+            {% for r in rows %}
+              {{ worker_row(loop.index0, r, categories) }}
+            {% endfor %}
+          </div>
+
+          <template id="workerRowTemplate">
+            {{ worker_row('__IDX__', {}, categories) }}
+          </template>
+
+          <div class="aw-actions">
+            <button type="button" class="btn btn-outline" id="addRowBtn">+ Add another worker</button>
+            <button type="submit" class="btn btn-primary" id="submitBtn">Create all accounts</button>
+          </div>
+          <p class="text-sm text-muted" id="rowCount">{{ rows|length }} worker(s) in this batch (max {{ max_rows }} at a time).</p>
+        </form>
+      </section>
+
+      <aside class="aw-side-col">
+        <section class="card aw-side-card">
+          <h2 class="family-heading">Accounts you created</h2>
+          <p class="text-sm text-muted" style="margin-bottom:14px;">Share the email and password with the person. They log in on their own phone and upload their ID for verification. Passwords are never shown here.</p>
+          {% if managed %}
+            <ul class="family-list">
+              {% for m in managed %}
+              <li class="family-item">
+                <div class="family-avatar">{{ m.name[:1]|upper }}</div>
+                <div class="family-meta">
+                  <div class="font-bold">{{ m.name }}</div>
+                  <div class="text-sm text-muted">{{ m.email }}</div>
+                  <div class="text-sm text-muted">{{ m.category }} · {{ m.city }}</div>
+                </div>
+                <span class="badge {{ 'badge-approved' if m.verification_status == 'approved' else ('badge-rejected' if m.verification_status == 'rejected' else 'badge-pending') }}">{{ m.verification_status|capitalize }}</span>
+              </li>
+              {% endfor %}
+            </ul>
+          {% else %}
+            <div class="empty-state">
+              <p class="font-bold">No worker accounts yet</p>
+              <p class="text-sm text-muted">Fill the form and create them. They will appear here.</p>
+            </div>
+          {% endif %}
+        </section>
+      </aside>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,1093 @@
+/* ==========================================================================
+   KaamNearby - Vue 3 Interactive Landing Page Stylesheet
+   Modern, Clean, Responsive Hyperlocal Services Marketplace Experience
+   ========================================================================== */
+
+/* Vue Cloak to prevent flash of uncompiled template */
+[v-cloak] {
+  display: none !important;
+}
+
+/* Animations & Transitions */
+.fade-enter-active, .fade-leave-active {
+  transition: opacity 0.3s ease;
+}
+.fade-enter-from, .fade-leave-to {
+  opacity: 0;
+}
+
+.slide-down-enter-active, .slide-down-leave-active {
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.slide-down-enter-from, .slide-down-leave-to {
+  opacity: 0;
+  transform: translateY(-12px);
+}
+
+.modal-enter-active, .modal-leave-active {
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.modal-enter-from, .modal-leave-to {
+  opacity: 0;
+  transform: scale(0.95) translateY(10px);
+}
+
+/* Hero Section Enhancements */
+.vue-hero {
+  position: relative;
+  background: radial-gradient(120% 90% at 85% 10%, #E8F1FF 0%, #F5F8FF 65%, #EFF5FF 100%);
+  padding: 4.5rem 0 3.5rem;
+  overflow: hidden;
+  border-bottom: 1px solid rgba(13, 91, 225, 0.08);
+}
+
+.vue-hero::before {
+  content: "";
+  position: absolute;
+  top: -150px;
+  right: -100px;
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, rgba(13, 91, 225, 0.12) 0%, rgba(13, 91, 225, 0) 70%);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.vue-hero::after {
+  content: "";
+  position: absolute;
+  bottom: -100px;
+  left: -80px;
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(circle, rgba(255, 138, 36, 0.10) 0%, rgba(255, 138, 36, 0) 70%);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.hero-pill-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: #FFFFFF;
+  border: 1.5px solid rgba(13, 91, 225, 0.18);
+  box-shadow: 0 4px 14px rgba(13, 91, 225, 0.08);
+  padding: 0.35rem 1rem;
+  border-radius: var(--radius-pill);
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--primary-blue);
+  margin-bottom: 1.25rem;
+}
+
+.hero-pill-badge .pulse-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: var(--color-success);
+  box-shadow: 0 0 0 3px rgba(22, 163, 106, 0.25);
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(22, 163, 106, 0.5); }
+  70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(22, 163, 106, 0); }
+  100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(22, 163, 106, 0); }
+}
+
+.vue-search-box {
+  background: #FFFFFF;
+  border: 2px solid #D5E3FC;
+  border-radius: var(--radius-pill);
+  padding: 0.4rem 0.5rem 0.4rem 1.25rem;
+  box-shadow: 0 12px 36px rgba(13, 91, 225, 0.12);
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 1.75rem;
+  transition: var(--transition);
+  position: relative;
+}
+
+.vue-search-box:focus-within {
+  border-color: var(--primary-blue);
+  box-shadow: 0 14px 40px rgba(13, 91, 225, 0.18);
+}
+
+.vue-search-input-wrap {
+  flex: 1.2;
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  min-width: 0;
+}
+
+.vue-search-input-wrap input {
+  width: 100%;
+  border: none;
+  outline: none;
+  font-size: 0.975rem;
+  font-family: inherit;
+  color: var(--text-main);
+  background: transparent;
+  padding: 0.6rem 0;
+}
+
+.vue-search-input-wrap input::placeholder {
+  color: #94A3B8;
+}
+
+.vue-search-divider {
+  width: 1.5px;
+  height: 32px;
+  background-color: #E2E8F0;
+}
+
+.vue-city-select-wrap {
+  flex: 0.9;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-width: 0;
+}
+
+.vue-city-select-wrap select {
+  width: 100%;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-family: inherit;
+  font-size: 0.925rem;
+  font-weight: 600;
+  color: var(--text-main);
+  cursor: pointer;
+}
+
+.vue-search-btn {
+  background: linear-gradient(135deg, var(--primary-blue) 0%, #0948B8 100%);
+  color: #FFFFFF;
+  border: none;
+  padding: 0.75rem 1.6rem;
+  border-radius: var(--radius-pill);
+  font-weight: 700;
+  font-size: 0.95rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: var(--transition);
+  white-space: nowrap;
+}
+
+.vue-search-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 20px rgba(13, 91, 225, 0.35);
+}
+
+/* Search Suggestions Dropdown */
+.vue-search-suggestions {
+  position: absolute;
+  top: calc(100% + 10px);
+  left: 0;
+  right: 0;
+  background: #FFFFFF;
+  border-radius: var(--radius-md);
+  box-shadow: 0 16px 40px rgba(16, 29, 58, 0.14);
+  border: 1px solid var(--border-color);
+  padding: 0.75rem;
+  z-index: 50;
+  max-height: 280px;
+  overflow-y: auto;
+}
+
+.suggestion-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.65rem 0.9rem;
+  border-radius: var(--radius-xs);
+  cursor: pointer;
+  font-size: 0.9rem;
+  color: var(--text-main);
+  transition: var(--transition);
+}
+
+.suggestion-item:hover {
+  background: var(--primary-blue-light);
+  color: var(--primary-blue);
+}
+
+/* Category Quick Filter Chips */
+.vue-cat-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+  margin-top: 1.5rem;
+}
+
+.vue-cat-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  background: #FFFFFF;
+  border: 1px solid #DCE6F5;
+  padding: 0.45rem 0.9rem;
+  border-radius: var(--radius-pill);
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--navy-subtle);
+  cursor: pointer;
+  transition: var(--transition);
+  box-shadow: 0 2px 6px rgba(16, 29, 58, 0.04);
+}
+
+.vue-cat-chip:hover {
+  background: var(--primary-blue-light);
+  border-color: var(--primary-blue);
+  color: var(--primary-blue);
+  transform: translateY(-1px);
+}
+
+.vue-cat-chip.active {
+  background: var(--primary-blue);
+  border-color: var(--primary-blue);
+  color: #FFFFFF;
+  box-shadow: 0 4px 12px rgba(13, 91, 225, 0.28);
+}
+
+/* Live Trust Stats Bar */
+.vue-trust-bar {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem;
+  background: #FFFFFF;
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-lg);
+  padding: 1.25rem 2rem;
+  box-shadow: 0 8px 24px rgba(16, 29, 58, 0.06);
+  margin-top: 2.75rem;
+}
+
+.trust-stat-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.trust-stat-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.stat-icon-blue { background: #EAF2FF; color: var(--primary-blue); }
+.stat-icon-orange { background: #FFF3E8; color: var(--accent-orange); }
+.stat-icon-green { background: #E8F8F0; color: var(--color-success); }
+.stat-icon-purple { background: #F3E8FF; color: #8B5CF6; }
+
+.trust-stat-number {
+  font-size: 1.35rem;
+  font-weight: 850;
+  color: var(--dark-navy);
+  line-height: 1.1;
+}
+
+.trust-stat-label {
+  font-size: 0.775rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-top: 0.15rem;
+}
+
+/* Live Interactive Price Estimator */
+.vue-calculator-section {
+  background: linear-gradient(180deg, #FFFFFF 0%, #F5F9FF 100%);
+  border-top: 1px solid var(--border-light);
+  border-bottom: 1px solid var(--border-light);
+  padding: 4rem 0;
+}
+
+.calculator-card {
+  background: #FFFFFF;
+  border: 1.5px solid #E1EAF8;
+  border-radius: var(--radius-xl);
+  box-shadow: 0 16px 40px rgba(13, 91, 225, 0.08);
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  overflow: hidden;
+}
+
+.calculator-controls {
+  padding: 2.5rem;
+}
+
+.calculator-preview {
+  background: linear-gradient(145deg, var(--dark-navy) 0%, #15294E 100%);
+  color: #FFFFFF;
+  padding: 2.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+  overflow: hidden;
+}
+
+.calculator-preview::after {
+  content: "";
+  position: absolute;
+  top: -60px;
+  right: -60px;
+  width: 220px;
+  height: 220px;
+  background: radial-gradient(circle, rgba(255, 138, 36, 0.18) 0%, rgba(255, 138, 36, 0) 70%);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.calc-segmented-group {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.5rem;
+  background: #F1F5F9;
+  padding: 0.35rem;
+  border-radius: var(--radius-sm);
+  margin-bottom: 1.5rem;
+}
+
+.calc-seg-btn {
+  border: none;
+  background: transparent;
+  padding: 0.6rem 0.5rem;
+  border-radius: var(--radius-xs);
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: var(--transition);
+  text-align: center;
+}
+
+.calc-seg-btn.active {
+  background: #FFFFFF;
+  color: var(--primary-blue);
+  font-weight: 700;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+}
+
+.calc-radio-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin-bottom: 1.75rem;
+}
+
+.calc-radio-pill {
+  border: 1.5px solid var(--border-color);
+  padding: 0.5rem 0.95rem;
+  border-radius: var(--radius-pill);
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-main);
+  cursor: pointer;
+  background: #FFFFFF;
+  transition: var(--transition);
+}
+
+.calc-radio-pill:hover {
+  border-color: var(--primary-blue);
+  color: var(--primary-blue);
+}
+
+.calc-radio-pill.selected {
+  background: var(--primary-blue-light);
+  border-color: var(--primary-blue);
+  color: var(--primary-blue);
+  font-weight: 700;
+}
+
+.calc-slider-wrap {
+  margin-bottom: 1.5rem;
+}
+
+.calc-slider-header {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.calc-range-slider {
+  width: 100%;
+  height: 6px;
+  border-radius: 4px;
+  background: #E2E8F0;
+  outline: none;
+  cursor: pointer;
+  accent-color: var(--primary-blue);
+}
+
+/* Worker Marketplace Directory (Live Vue Powered) */
+.vue-workers-section {
+  padding: 4.5rem 0;
+}
+
+.vue-filter-toolbar {
+  background: #FFFFFF;
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-md);
+  padding: 1rem 1.25rem;
+  box-shadow: 0 4px 16px rgba(16, 29, 58, 0.04);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.vue-filter-left {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  flex-wrap: wrap;
+}
+
+.vue-filter-right {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.vue-toggle-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-main);
+  cursor: pointer;
+  user-select: none;
+}
+
+.vue-switch {
+  position: relative;
+  display: inline-block;
+  width: 38px;
+  height: 22px;
+}
+
+.vue-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.vue-slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-color: #CBD5E1;
+  transition: .3s;
+  border-radius: 22px;
+}
+
+.vue-slider:before {
+  position: absolute;
+  content: "";
+  height: 16px;
+  width: 16px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  transition: .3s;
+  border-radius: 50%;
+}
+
+.vue-switch input:checked + .vue-slider {
+  background-color: var(--color-success);
+}
+
+.vue-switch input:checked + .vue-slider:before {
+  transform: translateX(16px);
+}
+
+/* Worker Cards */
+.worker-card-modern {
+  background: #FFFFFF;
+  border: 1.5px solid #EDF2F9;
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  box-shadow: 0 4px 16px rgba(16, 29, 58, 0.04);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: var(--transition);
+  position: relative;
+}
+
+.worker-card-modern:hover {
+  transform: translateY(-4px);
+  border-color: #C8DBFC;
+  box-shadow: 0 16px 36px rgba(13, 91, 225, 0.12);
+}
+
+.worker-card-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.worker-avatar-modern {
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #0D5BE1 0%, #1A3660 100%);
+  color: #FFFFFF;
+  font-weight: 800;
+  font-size: 1.35rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-shadow: 0 4px 12px rgba(13, 91, 225, 0.2);
+}
+
+.worker-meta-modern {
+  flex: 1;
+  min-width: 0;
+}
+
+.worker-meta-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.worker-name-modern {
+  font-size: 1.05rem;
+  font-weight: 750;
+  color: var(--dark-navy);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.worker-cat-tag {
+  display: inline-block;
+  background: #EFF6FF;
+  color: var(--primary-blue);
+  font-size: 0.775rem;
+  font-weight: 700;
+  padding: 0.2rem 0.55rem;
+  border-radius: var(--radius-xs);
+  margin-top: 0.2rem;
+}
+
+.worker-loc-line {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin-top: 0.35rem;
+}
+
+.worker-bio-clamp {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+  margin-bottom: 1.25rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  min-height: 2.5rem;
+}
+
+.worker-bottom-stats {
+  background: #F8FAFC;
+  border-radius: var(--radius-sm);
+  padding: 0.75rem 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.25rem;
+}
+
+.worker-price-val {
+  font-size: 1.15rem;
+  font-weight: 850;
+  color: var(--primary-blue);
+  line-height: 1;
+}
+
+.worker-price-sub {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+}
+
+.worker-card-actions {
+  display: grid;
+  grid-template-columns: 1fr 1.3fr;
+  gap: 0.65rem;
+}
+
+.btn-quickview {
+  background: #FFFFFF;
+  border: 1.5px solid var(--border-color);
+  color: var(--text-main);
+  padding: 0.65rem 0.75rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.85rem;
+  font-weight: 650;
+  cursor: pointer;
+  transition: var(--transition);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+}
+
+.btn-quickview:hover {
+  background: var(--bg-subtle);
+  border-color: #B9D0F5;
+  color: var(--primary-blue);
+}
+
+.btn-book-direct {
+  background: var(--primary-blue);
+  color: #FFFFFF;
+  padding: 0.65rem 0.75rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: var(--transition);
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  text-decoration: none;
+}
+
+.btn-book-direct:hover {
+  background: var(--primary-blue-hover);
+  color: #FFFFFF;
+  box-shadow: 0 4px 12px rgba(13, 91, 225, 0.25);
+}
+
+/* Modal Overlay & Card */
+.vue-modal-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(16, 29, 58, 0.65);
+  backdrop-filter: blur(4px);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+}
+
+.vue-modal-card {
+  background: #FFFFFF;
+  border-radius: var(--radius-xl);
+  max-width: 580px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.25);
+  position: relative;
+  padding: 2rem;
+}
+
+.modal-close-btn {
+  position: absolute;
+  top: 1.25rem;
+  right: 1.25rem;
+  background: #F1F5F9;
+  border: none;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--text-muted);
+  transition: var(--transition);
+}
+
+.modal-close-btn:hover {
+  background: #E2E8F0;
+  color: var(--dark-navy);
+}
+
+/* Dual Perspective How It Works */
+.how-perspective-tabs {
+  display: inline-flex;
+  background: #FFFFFF;
+  border: 1.5px solid var(--border-color);
+  padding: 0.35rem;
+  border-radius: var(--radius-pill);
+  box-shadow: 0 4px 12px rgba(16, 29, 58, 0.04);
+  margin-bottom: 2.5rem;
+}
+
+.perspective-btn {
+  border: none;
+  background: transparent;
+  padding: 0.65rem 1.75rem;
+  border-radius: var(--radius-pill);
+  font-size: 0.925rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: var(--transition);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.perspective-btn.active {
+  background: var(--primary-blue);
+  color: #FFFFFF;
+  box-shadow: 0 4px 14px rgba(13, 91, 225, 0.3);
+}
+
+/* Interactive Accordion FAQs */
+.faq-accordion-item {
+  background: #FFFFFF;
+  border: 1.5px solid var(--border-light);
+  border-radius: var(--radius-md);
+  margin-bottom: 0.85rem;
+  overflow: hidden;
+  transition: var(--transition);
+}
+
+.faq-accordion-item.open {
+  border-color: #BBD4FA;
+  box-shadow: 0 6px 18px rgba(13, 91, 225, 0.06);
+}
+
+.faq-question-btn {
+  width: 100%;
+  text-align: left;
+  background: transparent;
+  border: none;
+  padding: 1.25rem 1.5rem;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--dark-navy);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  gap: 1rem;
+}
+
+.faq-chevron {
+  transition: transform 0.3s ease;
+  flex-shrink: 0;
+  color: var(--primary-blue);
+}
+
+.faq-chevron.rotate {
+  transform: rotate(180deg);
+}
+
+.faq-answer-body {
+  padding: 0 1.5rem 1.25rem;
+  font-size: 0.95rem;
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+
+/* Responsive adjustments */
+@media (max-width: 991px) {
+  .calculator-card {
+    grid-template-columns: 1fr;
+  }
+  .vue-trust-bar {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .vue-search-box {
+    flex-direction: column;
+    border-radius: var(--radius-lg);
+    padding: 0.75rem;
+  }
+  .vue-search-divider {
+    display: none;
+  }
+  .vue-search-input-wrap, .vue-city-select-wrap, .vue-search-btn {
+    width: 100%;
+  }
+}
+
+@media (max-width: 640px) {
+  .vue-trust-bar {
+    grid-template-columns: 1fr;
+  }
+  .worker-card-actions {
+    grid-template-columns: 1fr;
+  }
+  .calc-segmented-group {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ==========================================================================
+   LANDING PAGE DARK THEME OVERRIDES
+   ========================================================================== */
+[data-theme="dark"] .vue-hero {
+  background: radial-gradient(120% 90% at 85% 10%, #15243E 0%, #0B111E 65%, #0E1626 100%);
+  border-bottom-color: #1E2D44;
+}
+
+[data-theme="dark"] .vue-hero::before {
+  background: radial-gradient(circle, rgba(59, 130, 246, 0.15) 0%, rgba(59, 130, 246, 0) 70%);
+}
+
+[data-theme="dark"] .hero-pill-badge {
+  background: #152033;
+  border-color: #243552;
+  color: #60A5FA;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3);
+}
+
+[data-theme="dark"] .vue-search-box {
+  background: #152033;
+  border-color: #243552;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.4);
+}
+
+[data-theme="dark"] .vue-search-box:focus-within {
+  border-color: #3B82F6;
+  box-shadow: 0 14px 40px rgba(59, 130, 246, 0.2);
+}
+
+[data-theme="dark"] .vue-search-input-wrap input {
+  color: #F1F5F9;
+}
+
+[data-theme="dark"] .vue-search-divider {
+  background-color: #243552;
+}
+
+[data-theme="dark"] .vue-city-select-wrap select {
+  color: #F1F5F9;
+  background-color: transparent;
+}
+
+[data-theme="dark"] .vue-city-select-wrap select option {
+  background-color: #152033;
+  color: #F1F5F9;
+}
+
+[data-theme="dark"] .vue-search-suggestions {
+  background: #152033;
+  border-color: #243552;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5);
+  color: #F1F5F9;
+}
+
+[data-theme="dark"] .suggestion-item {
+  color: #E2E8F0;
+}
+
+[data-theme="dark"] .suggestion-item:hover {
+  background: #1C2942;
+  color: #60A5FA;
+}
+
+[data-theme="dark"] .vue-cat-chip {
+  background: #152033;
+  border-color: #243552;
+  color: #E2E8F0;
+}
+
+[data-theme="dark"] .vue-cat-chip:hover {
+  background: #1C2E56;
+  border-color: #3B82F6;
+  color: #93C5FD;
+}
+
+[data-theme="dark"] .vue-cat-chip.active {
+  background: #3B82F6;
+  border-color: #3B82F6;
+  color: #FFFFFF;
+}
+
+[data-theme="dark"] .vue-trust-bar {
+  background: #152033;
+  border-color: #243552;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+}
+
+[data-theme="dark"] .trust-stat-number {
+  color: #F1F5F9;
+}
+
+[data-theme="dark"] .stat-icon-blue { background: #1C2E56; color: #60A5FA; }
+[data-theme="dark"] .stat-icon-orange { background: #3B2414; color: #F97316; }
+[data-theme="dark"] .stat-icon-green { background: #143524; color: #22C55E; }
+[data-theme="dark"] .stat-icon-purple { background: #2B1D45; color: #A78BFA; }
+
+[data-theme="dark"] .vue-calculator-section {
+  background: linear-gradient(180deg, #0B111E 0%, #10192A 100%);
+  border-color: #1E2D44;
+}
+
+[data-theme="dark"] .calculator-card {
+  background: #152033;
+  border-color: #243552;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4);
+}
+
+[data-theme="dark"] .calc-segmented-group {
+  background: #0B111E;
+}
+
+[data-theme="dark"] .calc-seg-btn {
+  color: #94A3B8;
+}
+
+[data-theme="dark"] .calc-seg-btn.active {
+  background: #1C2942;
+  color: #60A5FA;
+}
+
+[data-theme="dark"] .calc-radio-pill {
+  background: #152033;
+  border-color: #243552;
+  color: #E2E8F0;
+}
+
+[data-theme="dark"] .calc-radio-pill:hover {
+  border-color: #3B82F6;
+  color: #60A5FA;
+}
+
+[data-theme="dark"] .calc-radio-pill.selected {
+  background: #1C2E56;
+  border-color: #3B82F6;
+  color: #93C5FD;
+}
+
+[data-theme="dark"] .calc-slider-wrap .calc-range-slider {
+  background: #243552;
+}
+
+[data-theme="dark"] .calculator-controls div[style*="background: #F8FAFC"] {
+  background: #0E1626 !important;
+  border-color: #243552 !important;
+}
+
+[data-theme="dark"] .vue-filter-toolbar {
+  background: #152033;
+  border-color: #243552;
+}
+
+[data-theme="dark"] .worker-card-modern {
+  background: #152033;
+  border-color: #1E2D44;
+}
+
+[data-theme="dark"] .worker-card-modern:hover {
+  border-color: #3B82F6;
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.5);
+}
+
+[data-theme="dark"] .worker-name-modern {
+  color: #F1F5F9;
+}
+
+[data-theme="dark"] .worker-cat-tag {
+  background: #1C2E56;
+  color: #93C5FD;
+}
+
+[data-theme="dark"] .worker-bottom-stats {
+  background: #0E1626;
+}
+
+[data-theme="dark"] .worker-price-val {
+  color: #60A5FA;
+}
+
+[data-theme="dark"] .btn-quickview {
+  background: #1C2942;
+  border-color: #243552;
+  color: #E2E8F0;
+}
+
+[data-theme="dark"] .btn-quickview:hover {
+  background: #243552;
+  border-color: #3B82F6;
+  color: #60A5FA;
+}
+
+[data-theme="dark"] .vue-modal-overlay {
+  background: rgba(8, 13, 23, 0.85);
+}
+
+[data-theme="dark"] .vue-modal-card {
+  background: #152033;
+  color: #F1F5F9;
+  border: 1px solid #243552;
+}
+
+[data-theme="dark"] .modal-close-btn {
+  background: #1C2942;
+  color: #94A3B8;
+}
+
+[data-theme="dark"] .modal-close-btn:hover {
+  background: #243552;
+  color: #F1F5F9;
+}
+
+[data-theme="dark"] .vue-modal-card div[style*="background: #F8FAFC"] {
+  background: #0E1626 !important;
+}
+
+[data-theme="dark"] .how-perspective-tabs {
+  background: #152033;
+  border-color: #243552;
+}
+
+[data-theme="dark"] .step-card,
+[data-theme="dark"] .why-feature-card {
+  background: #152033;
+  border-color: #1E2D44;
+}
+
+[data-theme="dark"] .faq-accordion-item {
+  background: #152033;
+  border-color: #1E2D44;
+}
+
+[data-theme="dark"] .faq-question-btn {
+  color: #F1F5F9;
+}
+
+[data-theme="dark"] section[style*="background-color: #FFFFFF"],
+[data-theme="dark"] section[style*="background: #FFFFFF"] {
+  background-color: #0B111E !important;
+  border-color: #1E2D44 !important;
+}
+

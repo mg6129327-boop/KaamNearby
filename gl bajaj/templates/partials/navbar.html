@@ -1,0 +1,85 @@
+<nav class="navbar">
+  <div class="container nav-container">
+    <a href="{{ url_for('index') }}" class="brand-logo">
+      <img src="{{ url_for('static', filename='images/logo.svg') }}" alt="KaamNearby Logo" class="brand-logo-img">
+      <span><span class="brand-text-dark">Kaam</span><span class="brand-text-blue">Nearby</span></span>
+    </a>
+
+    <ul class="nav-links" id="navLinks">
+      <li><a href="{{ url_for('index') }}" class="{{ 'active' if request.endpoint == 'index' else '' }}" data-i18n="nav_home">Home</a></li>
+      <li><a href="{{ url_for('services') }}" class="{{ 'active' if request.endpoint in ('services', 'worker_detail') else '' }}" data-i18n="nav_services">Services</a></li>
+      <li><a href="{{ url_for('about') }}" class="{{ 'active' if request.endpoint == 'about' else '' }}" data-i18n="nav_about">About</a></li>
+      <li><a href="{{ url_for('contact') }}" class="{{ 'active' if request.endpoint == 'contact' else '' }}" data-i18n="nav_contact">Contact</a></li>
+    </ul>
+
+    <div class="nav-actions">
+      <!-- Language Switcher Button (English <-> Hindi) -->
+      <button type="button" class="btn-nav-control" id="langToggleBtn" title="Switch Language / भाषा बदलें" aria-label="Switch Language">
+        <i data-lucide="languages" style="width: 16px; height: 16px; color: var(--primary-blue);"></i>
+        <span id="langLabel" style="font-size: 0.825rem; font-weight: 750;">हिन्दी</span>
+      </button>
+
+      <!-- Theme Switcher Button (Light <-> Dark Mode) -->
+      <button type="button" class="btn-nav-control btn-theme-control" id="themeToggleBtn" title="Toggle Light / Dark Mode" aria-label="Toggle Theme">
+        <i data-lucide="moon" id="themeIconMoon" style="width: 16px; height: 16px;"></i>
+        <i data-lucide="sun" id="themeIconSun" style="width: 16px; height: 16px; display: none;"></i>
+        <span id="themeLabel" class="theme-text-label" style="font-size: 0.8rem; font-weight: 600;">Dark</span>
+      </button>
+
+      {% if current_user %}
+        <a href="{{ url_for('notifications') }}" class="notif-btn" title="Notifications">
+          <i data-lucide="bell" style="width: 19px; height: 19px;"></i>
+          {% if unread_notifications_count > 0 %}
+            <span class="notif-badge-count">{{ unread_notifications_count }}</span>
+          {% endif %}
+        </a>
+
+        {% if current_user.role == 'customer' %}
+          <a href="{{ url_for('customer_dashboard') }}" class="btn btn-outline-primary btn-sm">Dashboard</a>
+        {% elif current_user.role == 'worker' %}
+          <a href="{{ url_for('worker_dashboard') }}" class="btn btn-orange btn-sm">Worker Hub</a>
+        {% elif current_user.role == 'admin' %}
+          <a href="{{ url_for('admin_dashboard') }}" class="btn btn-secondary btn-sm">Admin Panel</a>
+        {% endif %}
+
+        <div class="user-dropdown">
+          <button class="dropdown-trigger" id="userDropdownTrigger" type="button">
+            <span style="display:inline-block; width:8px; height:8px; border-radius:50%; background:var(--color-success);"></span>
+            <span>{{ current_user.name.split(' ')[0] }}</span>
+            <i data-lucide="chevron-down" style="width: 14px; height: 14px;"></i>
+          </button>
+          <div class="dropdown-menu" id="userDropdownMenu">
+            <div style="padding: 0.6rem 1.25rem; font-size: 0.775rem; color: var(--text-muted); border-bottom: 1px solid var(--border-light);">
+              Signed in as <strong>{{ current_user.role|capitalize }}</strong><br>
+              <span style="font-size:0.725rem; color:var(--text-light);">{{ current_user.email }}</span>
+            </div>
+            {% if current_user.role == 'customer' %}
+              <a href="{{ url_for('customer_dashboard') }}"><i data-lucide="layout-dashboard" style="width:15px; height:15px;"></i>Dashboard</a>
+              <a href="{{ url_for('customer_bookings') }}"><i data-lucide="calendar" style="width:15px; height:15px;"></i>My Bookings</a>
+              <a href="{{ url_for('customer_profile') }}"><i data-lucide="user" style="width:15px; height:15px;"></i>Profile Settings</a>
+            {% elif current_user.role == 'worker' %}
+              <a href="{{ url_for('worker_dashboard') }}"><i data-lucide="layout-dashboard" style="width:15px; height:15px;"></i>Dashboard</a>
+              <a href="{{ url_for('worker_bookings') }}"><i data-lucide="briefcase" style="width:15px; height:15px;"></i>Booking Requests</a>
+              <a href="{{ url_for('worker_verification') }}"><i data-lucide="shield-check" style="width:15px; height:15px;"></i>ID Verification</a>
+              <a href="{{ url_for('worker_profile') }}"><i data-lucide="user" style="width:15px; height:15px;"></i>Trade Profile</a>
+            {% elif current_user.role == 'admin' %}
+              <a href="{{ url_for('admin_dashboard') }}"><i data-lucide="shield" style="width:15px; height:15px;"></i>Admin Overview</a>
+              <a href="{{ url_for('admin_verifications') }}"><i data-lucide="check-square" style="width:15px; height:15px;"></i>Worker Verifications</a>
+              <a href="{{ url_for('admin_support') }}"><i data-lucide="help-circle" style="width:15px; height:15px;"></i>Support Inquiries</a>
+              <a href="{{ url_for('admin_users') }}"><i data-lucide="users" style="width:15px; height:15px;"></i>User Accounts</a>
+            {% endif %}
+            <div class="dropdown-divider"></div>
+            <a href="{{ url_for('logout') }}" style="color: var(--color-error);"><i data-lucide="log-out" style="width:15px; height:15px;"></i>Logout</a>
+          </div>
+        </div>
+      {% else %}
+        <a href="{{ url_for('login') }}" class="btn-nav-login" data-i18n="nav_login">Login</a>
+        <a href="{{ url_for('register') }}" class="btn-nav-register" data-i18n="nav_register">Register</a>
+      {% endif %}
+
+      <button class="mobile-nav-toggle" id="mobileNavToggle" aria-label="Toggle navigation">
+        <i data-lucide="menu"></i>
+      </button>
+    </div>
+  </div>
+</nav>

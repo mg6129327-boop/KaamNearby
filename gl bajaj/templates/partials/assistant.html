@@ -1,0 +1,40 @@
+<!-- KaamNearby Help Assistant (Gemini) -->
+<div class="ka-assistant" id="kaAssistant">
+  <button type="button" class="ka-fab" id="kaFab" aria-expanded="false" aria-controls="kaPanel" aria-label="Open KaamNearby assistant">
+    <i data-lucide="message-circle"></i>
+    <span>Help</span>
+  </button>
+
+  <section class="ka-panel" id="kaPanel" role="dialog" aria-label="KaamNearby assistant" hidden>
+    <header class="ka-head">
+      <div>
+        <strong>KaamNearby Assistant</strong>
+        <small>Booking, pricing aur verification ke sawal poochhiye</small>
+      </div>
+      <button type="button" class="ka-icon-btn" id="kaSpeak" aria-pressed="false" aria-label="Read replies aloud" title="Jawab bolkar sunao">
+        <i data-lucide="volume-x"></i>
+      </button>
+      <button type="button" class="ka-close" id="kaClose" aria-label="Close assistant">
+        <i data-lucide="x"></i>
+      </button>
+    </header>
+
+    <div class="ka-chips">
+      <button type="button" data-q="Booking kaise karein?">Booking kaise karein?</button>
+      <button type="button" data-q="Price negotiation kaise kaam karta hai?">Price negotiation</button>
+      <button type="button" data-q="Worker verification kaise hota hai?">Verification</button>
+    </div>
+
+    <div class="ka-log" id="kaLog" aria-live="polite"></div>
+
+    <form class="ka-form" id="kaForm" autocomplete="off">
+      <button type="button" class="ka-icon-btn" id="kaMic" aria-label="Speak your question" title="Bolkar poochho" hidden>
+        <i data-lucide="mic"></i>
+      </button>
+      <input type="text" id="kaInput" maxlength="500" placeholder="Apna sawal likhiye..." aria-label="Type your question" required>
+      <button type="submit" id="kaSend">Send</button>
+    </form>
+
+    <p class="ka-note">Assistant galat ho sakta hai. Password, Aadhaar, PAN ya bank details kabhi share na karein.</p>
+  </section>
+</div>

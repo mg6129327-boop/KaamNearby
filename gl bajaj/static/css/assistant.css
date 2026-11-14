@@ -1,0 +1,137 @@
+/* KaamNearby help assistant widget. All rules are scoped to .ka-assistant. */
+.ka-assistant { position: fixed; right: 18px; bottom: 18px; z-index: 1200; font-family: 'Inter', system-ui, sans-serif; }
+.ka-assistant .ka-fab {
+  display: inline-flex; align-items: center; gap: 8px;
+  height: 52px; padding: 0 18px; border: 0; border-radius: 999px; cursor: pointer;
+  background: linear-gradient(135deg, #2563EB 0%, #0F9D8A 100%); color: #FFFFFF;
+  font-weight: 700; font-size: 15px;
+  box-shadow: 0 14px 30px rgba(37, 99, 235, 0.35);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.ka-assistant .ka-fab:hover { transform: translateY(-2px); box-shadow: 0 18px 36px rgba(37, 99, 235, 0.45); }
+.ka-assistant .ka-fab i, .ka-assistant .ka-fab svg { width: 20px; height: 20px; }
+
+.ka-assistant .ka-panel {
+  position: absolute; right: 0; bottom: 66px;
+  width: min(380px, calc(100vw - 32px)); height: min(560px, 72vh);
+  display: flex; flex-direction: column;
+  background: #0E2038; color: #DCE6F2;
+  border: 1px solid rgba(255, 255, 255, 0.10); border-radius: 20px;
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.45);
+  overflow: hidden;
+}
+.ka-assistant .ka-panel[hidden] { display: none !important; }
+
+.ka-assistant .ka-head {
+  display: flex; justify-content: space-between; align-items: center; gap: 12px;
+  padding: 16px; border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+.ka-assistant .ka-head strong { display: block; color: #FFFFFF; font-size: 15px; }
+.ka-assistant .ka-head small { display: block; color: #9FB0C8; font-size: 12px; margin-top: 2px; }
+.ka-assistant .ka-close {
+  width: 34px; height: 34px; border-radius: 10px; border: 0; cursor: pointer;
+  background: rgba(255, 255, 255, 0.08); color: #FFFFFF;
+  display: inline-flex; align-items: center; justify-content: center;
+}
+.ka-assistant .ka-close i, .ka-assistant .ka-close svg { width: 18px; height: 18px; }
+
+.ka-assistant .ka-chips { display: flex; flex-wrap: wrap; gap: 8px; padding: 10px 14px; }
+.ka-assistant .ka-chips button {
+  border: 1px solid rgba(255, 255, 255, 0.14); background: rgba(255, 255, 255, 0.05);
+  color: #DCE6F2; border-radius: 999px; padding: 6px 12px; font-size: 12px; cursor: pointer;
+}
+.ka-assistant .ka-chips button:hover { border-color: #5EEAD4; color: #FFFFFF; }
+
+.ka-assistant .ka-log {
+  flex: 1; min-height: 0; overflow-y: auto;
+  display: flex; flex-direction: column; gap: 10px; padding: 12px 14px;
+}
+.ka-assistant .ka-msg {
+  max-width: 86%; padding: 10px 13px; border-radius: 14px;
+  font-size: 14px; line-height: 1.5; white-space: pre-wrap; word-wrap: break-word;
+}
+.ka-assistant .ka-bot { align-self: flex-start; background: rgba(255, 255, 255, 0.08); color: #E6EEF8; border-bottom-left-radius: 4px; }
+.ka-assistant .ka-user { align-self: flex-end; background: #2563EB; color: #FFFFFF; border-bottom-right-radius: 4px; }
+.ka-assistant .ka-typing { opacity: 0.6; }
+
+.ka-assistant .ka-form { display: flex; gap: 8px; padding: 12px 14px; border-top: 1px solid rgba(255, 255, 255, 0.08); }
+.ka-assistant .ka-form input {
+  flex: 1; min-width: 0; height: 42px; padding: 0 12px;
+  border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.06); color: #FFFFFF; font: 14px 'Inter', sans-serif;
+}
+.ka-assistant .ka-form input::placeholder { color: #7F91AB; }
+.ka-assistant .ka-form input:focus { outline: 2px solid #5EEAD4; outline-offset: 1px; }
+.ka-assistant .ka-form button {
+  height: 42px; padding: 0 16px; border: 0; border-radius: 12px; cursor: pointer;
+  background: #0F9D8A; color: #FFFFFF; font-weight: 700; font-size: 14px;
+}
+.ka-assistant .ka-form button:disabled { opacity: 0.5; cursor: not-allowed; }
+.ka-assistant .ka-note { margin: 0; padding: 0 14px 12px; font-size: 11px; color: #7F91AB; }
+
+.ka-assistant button:focus-visible { outline: 3px solid #93C5FD; outline-offset: 2px; }
+
+@media (max-width: 520px) {
+  .ka-assistant { right: 10px; bottom: 10px; }
+  .ka-assistant .ka-panel { position: fixed; left: 8px; right: 8px; bottom: 72px; width: auto; height: min(70vh, 520px); }
+}
+
+/* Voice controls */
+.ka-assistant .ka-icon-btn {
+  width: 38px; height: 38px; flex-shrink: 0; border-radius: 12px; cursor: pointer;
+  border: 1px solid rgba(255, 255, 255, 0.14); background: rgba(255, 255, 255, 0.06); color: #FFFFFF;
+  display: inline-flex; align-items: center; justify-content: center;
+}
+.ka-assistant .ka-icon-btn i, .ka-assistant .ka-icon-btn svg { width: 18px; height: 18px; }
+.ka-assistant .ka-icon-btn[hidden] { display: none !important; }
+.ka-assistant .ka-icon-btn.is-on { background: #0F9D8A; border-color: #0F9D8A; }
+.ka-assistant .ka-icon-btn.is-listening { background: #DC2626; border-color: #DC2626; animation: ka-pulse 1s infinite; }
+@keyframes ka-pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.55; } }
+.ka-assistant .ka-head > div:first-child { flex: 1; min-width: 0; }
+.ka-assistant .ka-head { gap: 8px; }
+.ka-assistant .ka-form { align-items: center; }
+
+/* Login guide popup (first visit, guests only) */
+.ka-welcome {
+  position: fixed; inset: 0; z-index: 1300;
+  display: flex; align-items: center; justify-content: center; padding: 20px;
+  background: rgba(5, 12, 24, 0.72); backdrop-filter: blur(4px);
+  font-family: 'Inter', system-ui, sans-serif;
+}
+.ka-welcome[hidden] { display: none !important; }
+.ka-welcome-card {
+  width: min(460px, 100%); padding: 32px 28px; border-radius: 24px; text-align: center;
+  background: linear-gradient(180deg, #13294A 0%, #0E2038 100%);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 40px 80px rgba(0, 0, 0, 0.5);
+  color: #DCE6F2;
+}
+.ka-welcome-badge {
+  display: inline-block; margin-bottom: 14px; padding: 6px 12px; border-radius: 999px;
+  background: rgba(94, 234, 212, 0.12); border: 1px solid rgba(94, 234, 212, 0.35);
+  color: #5EEAD4; font-size: 12px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;
+}
+.ka-welcome-card h2 {
+  font-family: 'Manrope', 'Inter', sans-serif; font-size: 26px; font-weight: 800;
+  line-height: 1.2; color: #FFFFFF; margin: 0 0 12px;
+}
+.ka-welcome-card p { margin: 0 0 24px; font-size: 15px; line-height: 1.6; color: #9FB0C8; }
+.ka-welcome-actions { display: flex; flex-direction: column; gap: 10px; }
+.ka-welcome-btn {
+  display: flex; align-items: center; justify-content: center; height: 50px; border-radius: 14px;
+  font-weight: 700; font-size: 15px; text-decoration: none;
+  border: 1px solid rgba(255, 255, 255, 0.22); color: #FFFFFF; background: transparent;
+  transition: transform 0.2s ease, background 0.2s ease;
+}
+.ka-welcome-btn:hover { transform: translateY(-1px); background: rgba(255, 255, 255, 0.07); }
+.ka-welcome-primary {
+  background: linear-gradient(135deg, #2563EB 0%, #0F9D8A 100%); border-color: transparent;
+  box-shadow: 0 14px 30px rgba(37, 99, 235, 0.35);
+}
+.ka-welcome-primary:hover { background: linear-gradient(135deg, #1D4FD0 0%, #0C8A7A 100%); }
+.ka-welcome-skip {
+  margin-top: 16px; background: none; border: 0; cursor: pointer;
+  color: #7F91AB; font-size: 14px; text-decoration: underline; text-underline-offset: 3px;
+}
+.ka-welcome-skip:hover { color: #FFFFFF; }
+.ka-welcome-btn:focus-visible, .ka-welcome-skip:focus-visible { outline: 3px solid #93C5FD; outline-offset: 3px; }

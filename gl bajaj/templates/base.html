@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="csrf-token" content="{{ csrf_token }}">
+  <title>{% block title %}KaamNearby — Trusted Local Workers Near You{% endblock %}</title>
+  
+  <!-- Modern Inter & Stylized Script Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  
+  <!-- Application Stylesheets -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/responsive.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/assistant.css') }}">
+  
+  <!-- Pre-render theme check to prevent flash of wrong theme -->
+  <script>
+    (function () {
+      try {
+        var t = localStorage.getItem('kaamnearby_theme');
+        if (t === 'dark' || (!t && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+          document.documentElement.setAttribute('data-theme', 'dark');
+        } else {
+          document.documentElement.setAttribute('data-theme', 'light');
+        }
+      } catch (e) {}
+    })();
+  </script>
+
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  {% block styles %}{% endblock %}
+</head>
+<body>
+
+  {% include 'partials/navbar.html' %}
+  {% include 'partials/alerts.html' %}
+
+  <main>
+    {% block content %}{% endblock %}
+  </main>
+
+  {% block footer %}
+    {% include 'partials/footer.html' %}
+  {% endblock %}
+
+  {% if not current_user and request.endpoint == 'index' %}
+    {% include 'partials/welcome_modal.html' %}
+  {% endif %}
+  {% include 'partials/assistant.html' %}
+
+  <!-- Core Scripts -->
+  <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/assistant.js') }}" defer></script>
+  <script src="{{ url_for('static', filename='js/welcome.js') }}" defer></script>
+  <script src="{{ url_for('static', filename='js/add_worker.js') }}" defer></script>
+  <script>
+    if (typeof lucide !== 'undefined') {
+      lucide.createIcons();
+    }
+  </script>
+  {% block scripts %}{% endblock %}
+</body>
+</html>

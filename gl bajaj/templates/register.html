@@ -1,0 +1,171 @@
+{% extends 'base.html' %}
+
+{% block title %}Create an Account — KaamNearby{% endblock %}
+
+{% block content %}
+<div class="container py-12" style="max-width: 640px;">
+  <div class="form-card">
+    <div class="text-center mb-6">
+      <div style="display: flex; justify-content: center; margin-bottom: 0.85rem;">
+        <img src="{{ url_for('static', filename='images/logo.svg') }}" alt="KaamNearby Logo" style="width: 48px; height: 48px;">
+      </div>
+      <h1 class="text-2xl font-extrabold" style="color: var(--dark-navy);">Join KaamNearby</h1>
+      <p class="text-muted text-sm mt-1">Sign up as a household customer or a skilled service professional</p>
+    </div>
+
+    <!-- Account Role Selection Tabs -->
+    <div class="flex gap-2 mb-6" style="background: var(--bg-subtle); padding: 5px; border-radius: var(--radius-md); border: 1px solid var(--border-light);">
+      <button type="button" id="roleBtnCustomer" class="btn btn-sm btn-block {{ 'btn-primary' if form.get('role', request.args.get('role', 'customer')) != 'worker' else 'btn-outline' }}" style="border:none;">
+        <i data-lucide="user" style="width: 16px; height: 16px;"></i> I Need Home Services (Customer)
+      </button>
+      <button type="button" id="roleBtnWorker" class="btn btn-sm btn-block {{ 'btn-orange' if form.get('role', request.args.get('role', 'customer')) == 'worker' else 'btn-outline' }}" style="border:none;">
+        <i data-lucide="hard-hat" style="width: 16px; height: 16px;"></i> I Provide Services (Worker)
+      </button>
+    </div>
+
+    <!-- Google OAuth Sign-up Button -->
+    <a href="{{ url_for('google_login') }}?role={{ form.get('role', request.args.get('role', 'customer')) }}" id="googleSignupLink" class="btn-google-oauth">
+      <svg class="google-icon" viewBox="0 0 24 24" width="20" height="20" xmlns="http://www.w3.org/2000/svg">
+        <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+        <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+        <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z" fill="#FBBC05"/>
+        <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z" fill="#EA4335"/>
+      </svg>
+      <span id="googleSignupText">Sign up with Google (as Customer)</span>
+    </a>
+
+    <div class="oauth-divider">
+      <span>or register with email</span>
+    </div>
+
+    <form action="{{ url_for('register') }}" method="POST" id="registerForm">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+      <input type="hidden" name="role" id="roleInput" value="{{ form.get('role', request.args.get('role', 'customer')) }}">
+
+      <div class="grid grid-cols-2 gap-3">
+        <div class="form-group">
+          <label for="name">Full Name *</label>
+          <input type="text" id="name" name="name" class="form-control" placeholder="e.g. Ramesh Sharma" value="{{ form.get('name', '') }}" required>
+        </div>
+        <div class="form-group">
+          <label for="phone">Phone Number</label>
+          <input type="tel" id="phone" name="phone" class="form-control" placeholder="e.g. 9812345678" value="{{ form.get('phone', '') }}">
+        </div>
+      </div>
+
+      <div class="grid grid-cols-2 gap-3">
+        <div class="form-group">
+          <label for="email">Email Address *</label>
+          <input type="email" id="email" name="email" class="form-control" placeholder="name@example.com" value="{{ form.get('email', '') }}" required>
+        </div>
+        <div class="form-group">
+          <label for="city">City / Locality *</label>
+          <input type="text" id="city" name="city" class="form-control" placeholder="e.g. Mathura, Greater Noida" value="{{ form.get('city', '') }}" required>
+        </div>
+      </div>
+
+      <!-- Worker Specific Fields (shown when Worker selected) -->
+      <div id="workerFields" style="display: {{ 'block' if form.get('role', request.args.get('role', 'customer')) == 'worker' else 'none' }}; border-top: 1.5px dashed var(--border-color); padding-top: 1.25rem; margin-top: 0.5rem;">
+        <div class="grid grid-cols-2 gap-3">
+          <div class="form-group">
+            <label for="category">Primary Trade Category *</label>
+            <select id="category" name="category" class="form-control">
+              <option value="">Select Service Category</option>
+              {% for cat in categories %}
+                <option value="{{ cat.name }}" {{ 'selected' if form.get('category') == cat.name else '' }}>{{ cat.name }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="starting_price">Starting Price (₹) *</label>
+            <input type="number" id="starting_price" name="starting_price" class="form-control" placeholder="300" min="50" value="{{ form.get('starting_price', '350') }}">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div class="form-group">
+            <label for="experience_years">Years of Experience</label>
+            <input type="number" id="experience_years" name="experience_years" class="form-control" min="0" value="{{ form.get('experience_years', '3') }}">
+          </div>
+          <div class="form-group">
+            <label for="service_area">Service Areas Covered</label>
+            <input type="text" id="service_area" name="service_area" class="form-control" placeholder="e.g. Mathura Cantt, Highway, Sector 62" value="{{ form.get('service_area', '') }}">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="bio">Professional Experience & Bio</label>
+          <textarea id="bio" name="bio" rows="2" class="form-control" placeholder="Describe your trade background, certifications, and types of repairs you handle...">{{ form.get('bio', '') }}</textarea>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-2 gap-3">
+        <div class="form-group">
+          <label for="password">Password (min 8 chars) *</label>
+          <input type="password" id="password" name="password" class="form-control" placeholder="••••••••" minlength="8" required>
+        </div>
+        <div class="form-group">
+          <label for="confirm_password">Confirm Password *</label>
+          <input type="password" id="confirm_password" name="confirm_password" class="form-control" placeholder="••••••••" minlength="8" required>
+        </div>
+      </div>
+
+      <div class="form-group mb-4">
+        <label class="flex items-center gap-2" style="font-weight: 400; font-size: 0.85rem; cursor: pointer;">
+          <input type="checkbox" name="agree_terms" value="1" required checked style="accent-color: var(--primary-blue);">
+          <span>I agree to the <a href="{{ url_for('terms') }}" target="_blank">Terms of Service</a> and <a href="{{ url_for('privacy') }}" target="_blank">Privacy Policy</a>.</span>
+        </label>
+      </div>
+
+      <button type="submit" class="btn btn-primary btn-block btn-lg" id="submitBtn">
+        Complete Registration
+      </button>
+    </form>
+
+    <div class="text-center mt-6 text-sm text-muted">
+      Already have an account? <a href="{{ url_for('login') }}" class="font-bold" style="color: var(--primary-blue);">Log In</a>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const roleBtnCustomer = document.getElementById('roleBtnCustomer');
+    const roleBtnWorker = document.getElementById('roleBtnWorker');
+    const roleInput = document.getElementById('roleInput');
+    const workerFields = document.getElementById('workerFields');
+    const submitBtn = document.getElementById('submitBtn');
+    const googleSignupLink = document.getElementById('googleSignupLink');
+    const googleSignupText = document.getElementById('googleSignupText');
+
+    function setRole(role) {
+      roleInput.value = role;
+      if (googleSignupLink) {
+        googleSignupLink.href = "{{ url_for('google_login') }}?role=" + role;
+      }
+      if (role === 'worker') {
+        roleBtnWorker.className = 'btn btn-sm btn-block btn-orange';
+        roleBtnCustomer.className = 'btn btn-sm btn-block btn-outline';
+        workerFields.style.display = 'block';
+        submitBtn.className = 'btn btn-orange btn-block btn-lg';
+        submitBtn.textContent = 'Register as Service Worker';
+        if (googleSignupText) googleSignupText.textContent = 'Sign up with Google (as Worker)';
+      } else {
+        roleBtnCustomer.className = 'btn btn-sm btn-block btn-primary';
+        roleBtnWorker.className = 'btn btn-sm btn-block btn-outline';
+        workerFields.style.display = 'none';
+        submitBtn.className = 'btn btn-primary btn-block btn-lg';
+        submitBtn.textContent = 'Create Customer Account';
+        if (googleSignupText) googleSignupText.textContent = 'Sign up with Google (as Customer)';
+      }
+    }
+
+    roleBtnCustomer.addEventListener('click', () => setRole('customer'));
+    roleBtnWorker.addEventListener('click', () => setRole('worker'));
+
+    setRole(roleInput.value || 'customer');
+  });
+</script>
+{% endblock %}

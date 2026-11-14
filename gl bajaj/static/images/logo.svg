@@ -1,0 +1,14 @@
+<svg width="42" height="42" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- House Outline in vibrant blue -->
+  <path d="M24 5L7 19.5V41C7 42.1046 7.89543 43 9 43H39C40.1046 43 41 42.1046 41 41V19.5L24 5Z" stroke="#0D5BE1" stroke-width="3.8" stroke-linejoin="round" fill="#FFFFFF"/>
+  
+  <!-- Chimney -->
+  <path d="M33 11V15.5" stroke="#0D5BE1" stroke-width="3.5" stroke-linecap="round"/>
+  
+  <!-- Orange Angled Wrench -->
+  <path d="M18 31L28.5 20.5" stroke="#FF8A24" stroke-width="4.2" stroke-linecap="round"/>
+  <circle cx="17" cy="32" r="3.2" fill="#FF8A24"/>
+  <circle cx="17" cy="32" r="1.4" fill="#FFFFFF"/>
+  <path d="M26 17.5L31.5 23" stroke="#0D5BE1" stroke-width="3.2" stroke-linecap="round"/>
+  <path d="M29 15L33.5 19.5" stroke="#FF8A24" stroke-width="3.2" stroke-linecap="round"/>
+</svg>

@@ -1,0 +1,203 @@
+<!-- First-visit login dialog for guests (Features the exact same full sign-in page design & functionality) -->
+<div class="ka-welcome" id="kaWelcome" role="dialog" aria-modal="true" aria-labelledby="welcomeModalTitle" hidden>
+  <div class="login-split-card ka-welcome-split-card">
+    
+    <!-- Top-Right Close Button -->
+    <button type="button" class="ka-welcome-modal-close" id="kaWelcomeClose" aria-label="Close dialog">
+      <i data-lucide="x" style="width: 18px; height: 18px;"></i>
+    </button>
+
+    <!-- Left Column: Platform Brand & Trust Showcase (Same as Login Page) -->
+    <div class="login-brand-panel">
+      <div>
+        <div class="flex items-center gap-2 mb-4">
+          <img src="{{ url_for('static', filename='images/logo.svg') }}" alt="KaamNearby Logo" style="width: 44px; height: 44px; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.2));">
+          <span style="font-size: 1.6rem; font-weight: 850; letter-spacing: -0.02em;">
+            <span style="color: #FFFFFF;">Kaam</span><span style="color: #60A5FA;">Nearby</span>
+          </span>
+        </div>
+
+        <div class="login-pill-badge">
+          <span>⚡ 100% Direct Booking &bull; 0% Commission</span>
+        </div>
+
+        <h2 id="welcomeModalTitle" style="font-size: 2rem; font-weight: 850; line-height: 1.25; margin-bottom: 0.75rem; color: #FFFFFF;">
+          Trusted Local Technicians Near You
+        </h2>
+        <p style="color: #CADCFC; font-size: 0.95rem; line-height: 1.6;">
+          Book verified neighborhood electricians, plumbers, carpenters, and technicians with transparent pricing and zero middleman markups.
+        </p>
+
+        <!-- Feature List -->
+        <div class="login-feature-list">
+          <div class="login-feature-item">
+            <div class="login-feature-icon" style="background: rgba(13, 91, 225, 0.35); color: #93C5FD;">
+              <i data-lucide="badge-percent" style="width: 20px; height: 20px;"></i>
+            </div>
+            <div>
+              <div style="font-weight: 750; font-size: 0.95rem; color: #FFFFFF;">Direct Price Negotiation</div>
+              <div style="font-size: 0.8rem; color: #CADCFC; margin-top: 0.15rem;">Agree on the fee directly before the technician arrives.</div>
+            </div>
+          </div>
+
+          <div class="login-feature-item">
+            <div class="login-feature-icon" style="background: rgba(22, 163, 106, 0.35); color: #86EFAC;">
+              <i data-lucide="shield-check" style="width: 20px; height: 20px;"></i>
+            </div>
+            <div>
+              <div style="font-weight: 750; font-size: 0.95rem; color: #FFFFFF;">ID & Skill Verified Technicians</div>
+              <div style="font-size: 0.8rem; color: #CADCFC; margin-top: 0.15rem;">Government KYC vetting for your family's safety.</div>
+            </div>
+          </div>
+
+          <div class="login-feature-item">
+            <div class="login-feature-icon" style="background: rgba(255, 138, 36, 0.35); color: #FDBA74;">
+              <i data-lucide="zap" style="width: 20px; height: 20px;"></i>
+            </div>
+            <div>
+              <div style="font-weight: 750; font-size: 0.95rem; color: #FFFFFF;">Fast 30-Minute Dispatch</div>
+              <div style="font-size: 0.8rem; color: #CADCFC; margin-top: 0.15rem;">Technicians residing right in your neighborhood.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Testimonial Quote -->
+      <div class="login-testimonial">
+        <div class="flex items-center gap-1 mb-2" style="color: #FBBF24;">
+          <i data-lucide="star" style="width: 14px; height: 14px; fill: currentColor;"></i>
+          <i data-lucide="star" style="width: 14px; height: 14px; fill: currentColor;"></i>
+          <i data-lucide="star" style="width: 14px; height: 14px; fill: currentColor;"></i>
+          <i data-lucide="star" style="width: 14px; height: 14px; fill: currentColor;"></i>
+          <i data-lucide="star" style="width: 14px; height: 14px; fill: currentColor;"></i>
+        </div>
+        <p style="margin: 0; font-style: italic;">
+          &ldquo;Found an electrician in Mathura within 10 minutes. Discussed the price directly without any middleman inflation. Excellent experience!&rdquo;
+        </p>
+        <div style="margin-top: 0.5rem; font-weight: 750; color: #FFFFFF; font-size: 0.8rem;">
+          — Rohit Verma, Verified Customer
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Column: Authentication Form Panel (Same as Login Page) -->
+    <div class="login-form-panel">
+      <div class="mb-5">
+        <h3 style="font-size: 1.75rem; font-weight: 850; color: var(--dark-navy); line-height: 1.2;">Welcome Back</h3>
+        <p style="color: var(--text-muted); font-size: 0.875rem; margin-top: 0.35rem;">
+          Sign in to access your dashboard, manage bookings & track service requests.
+        </p>
+      </div>
+
+      <!-- Google OAuth Sign-in Button -->
+      <a href="{{ url_for('google_login') }}" class="btn-google-oauth">
+        <svg class="google-icon" viewBox="0 0 24 24" width="20" height="20" xmlns="http://www.w3.org/2000/svg">
+          <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+          <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+          <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z" fill="#FBBC05"/>
+          <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z" fill="#EA4335"/>
+        </svg>
+        <span>Continue with Google</span>
+      </a>
+
+      <div class="oauth-divider">
+        <span>or sign in with email</span>
+      </div>
+
+      <!-- Real Sign-In Form Submitting Directly to /login -->
+      <form action="{{ url_for('login') }}" method="POST" id="welcomeLoginForm">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+
+        <!-- Email Field with Leading Icon -->
+        <div class="form-group mb-3">
+          <label for="welcomeEmail" style="font-weight: 700; font-size: 0.85rem; color: var(--dark-navy);">Email Address</label>
+          <div class="input-icon-wrap">
+            <i data-lucide="mail" class="input-leading-icon"></i>
+            <input 
+              type="email" 
+              id="welcomeEmail" 
+              name="email" 
+              class="form-control" 
+              placeholder="name@example.com" 
+              required
+            >
+          </div>
+        </div>
+
+        <!-- Password Field with Leading Lock Icon & Eye Toggle -->
+        <div class="form-group mb-3">
+          <div class="flex items-center justify-between mb-1">
+            <label for="welcomePassword" style="font-weight: 700; font-size: 0.85rem; color: var(--dark-navy); margin-bottom: 0;">Password</label>
+            <a href="#" style="font-size: 0.775rem; font-weight: 600; color: var(--primary-blue);" onclick="alert('Password reset link has been dispatched to your email.'); return false;">Forgot?</a>
+          </div>
+          <div class="input-icon-wrap">
+            <i data-lucide="lock" class="input-leading-icon"></i>
+            <input 
+              type="password" 
+              id="welcomePassword" 
+              name="password" 
+              class="form-control" 
+              placeholder="••••••••" 
+              required
+            >
+            <button 
+              type="button" 
+              class="toggle-password" 
+              data-target="welcomePassword" 
+              style="position:absolute; right:12px; background:none; border:none; color:var(--text-muted); cursor:pointer;"
+              aria-label="Toggle password visibility"
+            >
+              <i data-lucide="eye" style="width:18px; height:18px;"></i>
+            </button>
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-block btn-lg" style="box-shadow: 0 6px 20px rgba(13, 91, 225, 0.3); font-weight: 750;">
+          <span>Sign In to Account</span>
+          <i data-lucide="arrow-right" style="width: 17px; height: 17px;"></i>
+        </button>
+      </form>
+
+      <div class="flex items-center justify-between mt-4 text-xs" style="color: var(--text-muted);">
+        <span>New to KaamNearby?</span>
+        <a href="{{ url_for('register') }}" class="font-bold" style="color: var(--primary-blue);">Create Free Account &rarr;</a>
+      </div>
+
+      <!-- Quick 1-Click Demo Accounts Selector -->
+      <div style="margin-top: 1.25rem; padding: 0.85rem 1rem; background-color: var(--bg-subtle); border-radius: var(--radius-md); border: 1.5px dashed #C8DBFC;">
+        <div class="flex items-center justify-between">
+          <div class="font-bold flex items-center gap-1" style="color: var(--dark-navy); font-size: 0.775rem;">
+            <i data-lucide="key" style="width: 13px; height: 13px; color: var(--primary-blue);"></i> 
+            <span>1-Click Test Demo Logins:</span>
+          </div>
+          <span style="font-size: 0.7rem; color: var(--text-muted);">Auto-fill</span>
+        </div>
+
+        <div class="demo-account-pills" style="margin-top: 0.45rem;">
+          <button type="button" class="demo-account-pill" onclick="fillWelcomeLogin('admin@kaamnearby.com', 'Admin@12345')">
+            <i data-lucide="shield" style="width: 12px; height: 12px; color: var(--dark-navy);"></i>
+            <span>Admin</span>
+          </button>
+
+          <button type="button" class="demo-account-pill" onclick="fillWelcomeLogin('rahul.customer@example.com', 'Customer@12345')">
+            <i data-lucide="user" style="width: 12px; height: 12px; color: var(--primary-blue);"></i>
+            <span>Customer</span>
+          </button>
+
+          <button type="button" class="demo-account-pill" onclick="fillWelcomeLogin('suresh.electrician@example.com', 'Worker@12345')">
+            <i data-lucide="wrench" style="width: 12px; height: 12px; color: var(--accent-orange);"></i>
+            <span>Worker</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="text-center mt-3">
+        <button type="button" class="ka-welcome-skip" id="kaWelcomeSkip">
+          Abhi nahi, pehle browse karein &rarr;
+        </button>
+      </div>
+
+    </div>
+
+  </div>
+</div>
